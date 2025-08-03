@@ -2,7 +2,6 @@
 """
 import torch
 
-
 def affine_forward(x, w, b):
     """Computes the forward pass for an affine (fully connected) layer.
 
@@ -43,7 +42,9 @@ def rnn_step_forward(x, prev_h, Wx, Wh, b):
     ##############################################################################
     # TODO: Implement a single forward step for the vanilla RNN.                 #
     ##############################################################################
-    # 
+    
+    next_h = torch.tanh(prev_h@Wh + x@Wx + b)
+    
     ##############################################################################
     #                               END OF YOUR CODE                             #
     ##############################################################################
@@ -73,7 +74,18 @@ def rnn_forward(x, h0, Wx, Wh, b):
     # input data. You should use the rnn_step_forward function that you defined  #
     # above. You can use a for loop to help compute the forward pass.            #
     ##############################################################################
-    # 
+   
+    N, T, _ = x.shape
+    H = h0.shape[1]
+
+    # h = torch.zeros((N, T, H), dtype=torch.float64) # when checking gradient use this line
+    h = torch.zeros((N, T, H)) # when training use this line
+    prev_h = h0
+
+    for t in range(T):
+        prev_h = rnn_step_forward(x[:, t, :], prev_h, Wx, Wh, b)
+        h[:, t, :] = prev_h
+
     ##############################################################################
     #                               END OF YOUR CODE                             #
     ##############################################################################
@@ -101,7 +113,7 @@ def word_embedding_forward(x, W):
     #                                                                            #
     # HINT: This can be done in one line using Pytorch's array indexing.         #
     ##############################################################################
-    # 
+    out = W[x] # fetch W[idx]
     ##############################################################################
     #                               END OF YOUR CODE                             #
     ##############################################################################
