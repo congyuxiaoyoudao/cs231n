@@ -60,15 +60,15 @@ def deprocess_image(img, rescale=False):
 def image_from_url(url):
     """
     Read an image from a URL. Returns a numpy array with the pixel data.
-    We write the image to a temporary file then read it back. Kinda gross.
+    Download it into a temporary file, after we read it delete it.
     """
     try:
-        f = urllib.request.urlopen(url)
-        _, fname = tempfile.mkstemp()
-        with open(fname, "wb") as ff:
-            ff.write(f.read())
-        img = imread(fname)
-        os.remove(fname)
+        with tempfile.NamedTemporaryFile(delete=False, suffix='.jpg') as tmp:
+            tmp.write(urllib.request.urlopen(url).read())
+            tmp_path = tmp.name
+
+        img = imread(tmp_path).copy()
+        os.remove(tmp_path)
         return img
     except urllib.error.URLError as e:
         print("URL Error: ", e.reason, url)
