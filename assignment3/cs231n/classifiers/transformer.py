@@ -88,6 +88,20 @@ class CaptioningTransformer(nn.Module):
         #  3) Finally, apply the decoder features on the text & image embeddings   #
         #     along with the tgt_mask. Project the output to scores per token      #
         ############################################################################
+        
+        # 1. Embedding and add positional encoding
+        cap_embeddings = self.embedding(captions)
+        cap_embeddings = self.positional_encoding(cap_embeddings) # (N, T, W)
+
+        img_embeddings = self.visual_projection(features)         # (N, W)
+        img_embeddings = img_embeddings.unsqueeze(1)              # (N, 1, W)
+
+        # 2. Prepare tgt_mask
+        tgt_mask = torch.tril(torch.ones(T, T)) # (T, T)
+
+        # 3. Decode and project
+        decoder_output = self.transformer(tgt=cap_embeddings, memory=img_embeddings, tgt_mask=tgt_mask) # (N, T, W)
+        scores = self.output(decoder_output) # (N, T, V)
 
         ############################################################################
         #                             END OF YOUR CODE                             #
@@ -240,7 +254,13 @@ class VisionTransformer(nn.Module):
         #    You may find torch.mean useful.                                      #
         # 5. Feed it through a linear layer to produce class logits.              #
         ############################################################################
-
+        
+        patches = self.patch_embed(x)                # (N, num_patches, embed_dim)
+        patches = self.positional_encoding(patches)  # (N, num_patches, embed_dim)
+        encoder_output = self.transformer(patches)   # (N, num_patches, embed_dim)
+        features = torch.mean(encoder_output, dim=1) # (N, embed_dim)
+        logits = self.head(features)                 # (N, num_classes)
+        
         ############################################################################
         #                             END OF YOUR CODE                             #
         ############################################################################
