@@ -294,12 +294,12 @@ class Unet(nn.Module):
         ##################################################################
         
         # Downsampling
-        short_cut = []
+        shortcuts = []
         for block in self.downs:
             x = block[0](x, context) # resnet
-            short_cut.append(x)
+            shortcuts.append(x)
             x = block[1](x, context) # resnet
-            short_cut.append(x)
+            shortcuts.append(x)
             x = block[2](x) # downsample
         
         # Middle block
@@ -309,9 +309,9 @@ class Unet(nn.Module):
         # Upsampling
         for block in self.ups:
             x = block[0](x) # upsample
-            x = torch.concatenate([x, short_cut.pop()], dim=1) # resnet
+            x = torch.concatenate([x, shortcuts.pop()], dim=1) # resnet
             x = block[1](x, context)
-            x = torch.concatenate([x, short_cut.pop()], dim=1) # resnet
+            x = torch.concatenate([x, shortcuts.pop()], dim=1) # resnet
             x = block[2](x, context)
         ##################################################################
 
