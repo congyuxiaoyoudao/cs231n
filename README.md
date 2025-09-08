@@ -2,7 +2,7 @@
 
 This repository contains implementations for assignments of Stanford CS231n: Deep Learning for Computer Vision Spring 2025. Homepage of this course can be found [here](https://cs231n.stanford.edu/index.html). Course videos can be found [here](https://www.youtube.com/playlist?list=PL3FW7Lu3i5JvHM8ljYj-zLfQRF3EO8sYv). (Though maybe a little outdated, but whatever, just for your reference :p)
 
-\* News: Very happy that their team has uploaded the latest online course playlist on Sep 3 2025, now you should reference [this](https://www.youtube.com/playlist?list=PLoROMvodv4rOmsNzYBMe0gJY2XS8AQg16)!  
+\* News: Very happy that their team has uploaded the latest online course playlist on Sep 3 2025, now you should refer to [this](https://www.youtube.com/playlist?list=PLoROMvodv4rOmsNzYBMe0gJY2XS8AQg16)!  
 
 **DOWNLOADS**
 
